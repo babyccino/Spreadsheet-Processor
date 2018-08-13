@@ -65,40 +65,13 @@ describe('spreadsheetProcessor', () => {
 
   describe('coordsToAddress', () => {
     it('test values', done => {
-      expect(spreadsheetProcessor.coordsToAddress([0,0])).to.equal('A1');
-      expect(spreadsheetProcessor.coordsToAddress([25,8])).to.equal('Z9');
-      expect(spreadsheetProcessor.coordsToAddress([26,9])).to.equal('AA10');
-      expect(spreadsheetProcessor.coordsToAddress([51,9])).to.equal('AZ10');
-      expect(spreadsheetProcessor.coordsToAddress([52,9])).to.equal('BA10');
-      expect(spreadsheetProcessor.coordsToAddress([26*26 + 26 - 1,999])).to.equal('ZZ1000');
-      expect(spreadsheetProcessor.coordsToAddress([26*26 + 26,999])).to.equal('AAA1000');
-      done();
-    });
-
-  });
-
-  describe('formatFunction', () => {
-    it('sample functions', done => {
-      let res = spreadsheetProcessor.formatFunction('=A1B1-3.1--');
-      deleteAll(res, "value");
-      expect(res)
-        .to.eql([
-          { type: 'cellRef' },
-          { type: 'cellRef' },
-          { type: 'number' },
-          { type: 'op' },
-          { type: 'op' }
-        ]);
-      res = spreadsheetProcessor.formatFunction('=A1B1- 3.1-');
-      deleteAll(res, "value");
-      expect(res)
-        .to.eql([
-          { type: 'cellRef' },
-          { type: 'cellRef' },
-          { type: 'op' },
-          { type: 'number' },
-          { type: 'op' }
-        ]);
+      expect(spreadsheetProcessor.coordsToAddress(0,0)).to.equal('A1');
+      expect(spreadsheetProcessor.coordsToAddress(25,8)).to.equal('Z9');
+      expect(spreadsheetProcessor.coordsToAddress(26,9)).to.equal('AA10');
+      expect(spreadsheetProcessor.coordsToAddress(51,9)).to.equal('AZ10');
+      expect(spreadsheetProcessor.coordsToAddress(52,9)).to.equal('BA10');
+      expect(spreadsheetProcessor.coordsToAddress(26*26 + 26 - 1,999)).to.equal('ZZ1000');
+      expect(spreadsheetProcessor.coordsToAddress(26*26 + 26,999)).to.equal('AAA1000');
       done();
     });
 
@@ -212,7 +185,7 @@ describe('spreadsheetProcessor', () => {
       let func = "=B1 C1+,=A2 B2 +,=A2 B2 +\n2,3",
           arr = spreadsheetProcessor.toArray(func);
       spreadsheetProcessor.executeAllExpressions(arr);
-      deleteAll(arr, "type", "address")
+      deleteAll(arr, "type", "address", "firstRef");
       expect(arr).to.eql([
         [{ value: 10 },{ value: 5 },{ value: 5 }],
         [{ value: 2 },{ value: 3 }]
